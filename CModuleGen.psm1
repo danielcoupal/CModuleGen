@@ -2,20 +2,20 @@
 #!/usr/bin/pwsh
 #
 # Date: 2022-04-25
-# Last: 2023-03-09
+# Last: 2024-05-15
 # Author: Daniel Coupal
-# Create C module header, source and -optionally- test file(s).
+# Create C module header, source and -optionally- test files.
 #
 # Include copy of ./proj_conf.ps1 with project-specific details.
 # For best results, use Doxygen module name as "-ModuleName" arg.
 ################################################################################
 
 New-Variable -Name ProjName -Scope Script -Force
-New-Variable -Name Year -Scope Script -Force
 New-Variable -Name Date -Scope Script -Force
 New-Variable -Name Compiler -Scope Script -Force
 New-Variable -Name Target -Scope Script -Force
 New-Variable -Name Author -Scope Script -Force
+New-Variable -Name Version -Scope Script -Force
 
 function New-Header {
     param (
@@ -25,14 +25,13 @@ function New-Header {
     $boiler = Get-Content "$env:REPOS/CModuleGen/header.templ"
     $boiler = $boiler -Replace '{FileBaseName}', "$fileBaseName"
     $boiler = $boiler -Replace '{ProjName}', "$ProjName"
-    $boiler = $boiler -Replace '{Year}', "$Year"
     $boiler = $boiler -Replace '{Date}', "$Date"
     $boiler = $boiler -Replace '{DoxGroup}', "$fileBaseName"
     $boiler = $boiler -Replace '{DoxGroupName}', "$doxGroupName"
     $boiler = $boiler -Replace '{Author}', "$Author"
     $boiler = $boiler -Replace '{INCLUDE_GUARD}', "$includeGuard"
-    if ($WithVersion) {
-        $boiler = $boiler -Replace '{Version}', " * @version 0.1.0`n *`n"
+    if ($Version.Length -neq 0) {
+        $boiler = $boiler -Replace '{Version}', " * @version $Version`n *`n"
     }
     else {
         $boiler = $boiler | Select-String '{Version}' -NotMatch
@@ -88,7 +87,6 @@ function New-Unit-Test {
     $boiler = Get-Content "$env:REPOS/CModuleGen/unit_test.templ"
     $boiler = $boiler -Replace '{FileBaseName}', "$fileBaseName"
     $boiler = $boiler -Replace '{ProjName}', "$ProjName"
-    $boiler = $boiler -Replace '{Year}', "$Year"
     $boiler = $boiler -Replace '{Date}', "$Date"
     $boiler = $boiler -Replace '{Compiler}', "$Compiler"
     $boiler = $boiler -Replace '{Target}', "$Target"
@@ -105,7 +103,7 @@ function New-CModule {
     param (
         [Parameter(Position=0, Mandatory=$true, ValueFromPipeline=$true)]
         [string]$ModuleName,
-        [switch]$WithVersion,
+        [string]$Version,
         [switch]$RTOS,
         [switch]$UnitTest,
         [switch]$PrintOnly,
@@ -124,10 +122,10 @@ function New-CModule {
     $includeGuard = ($ModuleName.ToUpper() -Replace " ", "_") + "_H_"
 
     if (Test-Path "./proj_conf.ps1") {
-        $ProjName, $Year, $Date, $Compiler, $Target, $Author = ./proj_conf.ps1
+        $ProjName, $Date, $Compiler, $Target, $Author = ./proj_conf.ps1
     }
     else {
-        $ProjName, $Year, $Date, $Compiler, $Target, $Author = Read-Host
+        $ProjName, $Date, $Compiler, $Target, $Author = Read-Host
     }
 
     if($Only -in ("All", "Header")) {
