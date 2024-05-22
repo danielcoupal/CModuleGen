@@ -30,7 +30,7 @@ function New-Header {
     $boiler = $boiler -Replace '{DoxGroupName}', "$doxGroupName"
     $boiler = $boiler -Replace '{Author}', "$Author"
     $boiler = $boiler -Replace '{INCLUDE_GUARD}', "$includeGuard"
-    if ($Version.Length -neq 0) {
+    if ($Version.Length -ne 0) {
         $boiler = $boiler -Replace '{Version}', " * @version $Version`n *`n"
     }
     else {
@@ -41,7 +41,7 @@ function New-Header {
         Write-Output $boiler
     }
     else {
-        $boiler | Tee-Object "$fileBaseName.h"
+        $boiler | Tee-Object -Append "$fileBaseName.h"
     }
 }
 
@@ -75,7 +75,7 @@ function New-Source {
         Write-Output $boiler
     }
     else {
-        $boiler | Tee-Object "$fileBaseName.c"
+        $boiler | Tee-Object -Append "$fileBaseName.c"
     }
 }
 
@@ -95,7 +95,7 @@ function New-Unit-Test {
         Write-Output $boiler
     }
     else {
-        $boiler | Tee-Object "test_$fileBaseName.c"
+        $boiler | Tee-Object -Append "test_$fileBaseName.c"
     }
 }
 
@@ -140,4 +140,3 @@ function New-CModule {
 }
 
 Export-ModuleMember -Function 'New-CModule'
-
