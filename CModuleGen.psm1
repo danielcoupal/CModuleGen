@@ -41,7 +41,7 @@ function New-Header {
         Write-Output $boiler
     }
     else {
-        $boiler | Tee-Object -Append "$fileBaseName.h"
+        $boiler | Set-Content "$fileBaseName.h" -Encoding UTF8
     }
 }
 
@@ -75,7 +75,7 @@ function New-Source {
         Write-Output $boiler
     }
     else {
-        $boiler | Tee-Object -Append "$fileBaseName.c"
+        $boiler | Set-Content "$fileBaseName.c" -Encoding UTF8
     }
 }
 
@@ -95,7 +95,7 @@ function New-Unit-Test {
         Write-Output $boiler
     }
     else {
-        $boiler | Tee-Object -Append "test_$fileBaseName.c"
+        $boiler | Set-Content "test_$fileBaseName.c" -Encoding UTF8
     }
 }
 
