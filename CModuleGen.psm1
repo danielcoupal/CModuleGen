@@ -22,7 +22,7 @@ function New-Header {
         [string]$fileBaseName
     )
 
-    $boiler = Get-Content "$env:REPOS/CModuleGen/header.templ"
+    $boiler = Get-Content "$PSScriptRoot/header.templ"
     $boiler = $boiler -Replace '{FileBaseName}', "$fileBaseName"
     $boiler = $boiler -Replace '{ProjName}', "$ProjName"
     $boiler = $boiler -Replace '{Date}', "$Date"
@@ -50,7 +50,7 @@ function New-Source {
         [string]$fileBaseName
     )
 
-    $boiler = Get-Content "$env:REPOS/CModuleGen/source.templ"
+    $boiler = Get-Content "$PSScriptRoot/source.templ"
     $boiler = $boiler -Replace '{FileBaseName}', "$fileBaseName"
     $boiler = $boiler -Replace '{ProjName}', "$ProjName"
     $boiler = $boiler -Replace '{Year}', "$Year"
@@ -84,7 +84,7 @@ function New-Unit-Test {
         [string]$fileBaseName
     )
 
-    $boiler = Get-Content "$env:REPOS/CModuleGen/unit_test.templ"
+    $boiler = Get-Content "$PSScriptRoot/unit_test.templ"
     $boiler = $boiler -Replace '{FileBaseName}', "$fileBaseName"
     $boiler = $boiler -Replace '{ProjName}', "$ProjName"
     $boiler = $boiler -Replace '{Date}', "$Date"
